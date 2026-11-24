@@ -6,9 +6,18 @@ with no network and no input beyond the fixed line below.
 """
 import os
 
+# Gate for this bounty: entry.txt must be UTF-8 text of 1 to 200 characters,
+# not only white space, and a haiku of exactly three lines (5-7-5 syllables)
+# about debugging. Refuse to write an entry that would fail the gate.
+MAX_CHARS = 200
+
 LINE = 'Green lights everywhere\nbut production burns tonight\nit was my typo'
 
 def main():
+    if not (1 <= len(LINE) <= MAX_CHARS) or not LINE.strip():
+        raise SystemExit(f"entry violates the gate: {len(LINE)} characters")
+    if len(LINE.split("\n")) != 3:
+        raise SystemExit("entry must be a haiku of exactly three lines")
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, "entry.txt"), "w", encoding="utf-8") as f:
